@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Pruebacamara.MainPage">
+
+    <StackLayout>
+        <Label FontSize="Title">Prueba de validación</Label>
+        <DatePicker x:Name="Fecha">
+            
+        </DatePicker>
+        <Label Text="Fecha"> 
+            
+        </Label>
+        <Entry  Placeholder="            " 
+									   Keyboard="Numeric"
+										TextColor="Black"
+										   VerticalOptions="Center"
+										   IsSpellCheckEnabled="false"
+										   IsTextPredictionEnabled="false"
+										   x:Name="EntryEndDate"
+                                            TextChanged="Entry_TextChanged"
+										   MaxLength="11"/>
+    </StackLayout>
+
+</ContentPage>
