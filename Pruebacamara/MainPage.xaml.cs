@@ -17,10 +17,65 @@ namespace Pruebacamara
 
         private bool GreaterEleven { get; set; } = false;
 
+        public string FechaTexto { get; set; }
+        private string numbertoMoney { get; set; }
+        public string NumbertoMoney
+        {
+            get { return numbertoMoney; }
+            set
+            {
+                numbertoMoney = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private string fechaPresc { get; set; }
+        public string FechaPresc
+        {
+            get { return fechaPresc; }
+            set
+            {
+                fechaPresc = AddSeparatorWriting(value);
+                OnPropertyChanged();
+            }
+        }
+
+        private Stack<int> Last { get; set; } = new Stack<int>();
+
         public MainPage()
         {
             InitializeComponent();
+            BindingContext = this;
             Fecha.MaximumDate = DateTime.Today;
+            int inicio = 10;
+            for (int i = inicio; i <= 31; i++)
+            {
+                Dia.Items.Add(i.ToString());
+            }
+
+            int anio = DateTime.Today.Year;
+
+
+            for (int i = anio; i >= 1900; i--)
+            {
+                Anio.Items.Add(i.ToString());
+            }
+
+            DateTime fecha = DateTime.Today;
+            string fechaCompl = fecha.ToString("dd/MM/yyyy");
+            string[] fechaComplArr = fechaCompl.Split('/');
+            string dia = fechaComplArr[0];
+            string mes = fechaComplArr[1];
+            string anioS = fechaComplArr[2];
+            Console.WriteLine("Dia " + dia + " Mes " + mes + anioS + "Año");
+
+            int itemToSelect = Dia.Items.IndexOf(dia);
+            Dia.SelectedIndex = itemToSelect;
+            int AnioitemToSelect = Anio.Items.IndexOf(anioS);
+            Anio.SelectedIndex = AnioitemToSelect;
+            int MesitemToSelect = Mes.Items.IndexOf(mes);
+            Mes.SelectedIndex = MesitemToSelect;
         }
 
         private void Button_Clicked(object sender, EventArgs e)
@@ -80,9 +135,16 @@ namespace Pruebacamara
         private void Entry_TextChanged(object sender, TextChangedEventArgs e)
         {
             Entry entryDate = sender as Entry;
+            int post = entryDate.CursorPosition;
             entryDate.TextChanged -= Entry_TextChanged;
             string newValue = e.NewTextValue;
             bool erasingData = CheckErasingEntry(e);
+
+            if (newValue.Length < 10 && erasingData)
+            {
+                Last.Push(post);
+                Console.WriteLine(post);
+            }
             //01/12/2022
             const string patternDate = @"^\d{2}/\d{2}/\d{4}$";
             //0/12/1312
@@ -94,13 +156,7 @@ namespace Pruebacamara
 
             const string separator = "/";
 
-            if (erasingData && !GreaterEleven)
-            {
-               // newValue = newValue.Replace(separator, string.Empty);
-               // entryDate.Text = newValue;
-                entryDate.TextChanged += Entry_TextChanged;
-                return;
-            }
+
             /*
                 if (!Regex.IsMatch(newValue, patternDate, RegexOptions.IgnoreCase) && (Regex.IsMatch(newValue, patternAfterReasedOne, RegexOptions.IgnoreCase) ||
                     Regex.IsMatch(newValue, patternAfterReasedTwo, RegexOptions.IgnoreCase) ||
@@ -117,7 +173,7 @@ namespace Pruebacamara
                 if (newValue.Length > 10)
                 {
                     GreaterEleven = true;
-                    newValue = newValue.Remove(10, 1).Substring(0, 10);
+                    newValue = newValue.Remove(newValue.Length - 1, 1);
                 }
                 else
                 {
@@ -126,6 +182,12 @@ namespace Pruebacamara
                 newValue = AddSeparatorWriting(newValue);
             }
             entryDate.Text = newValue;
+            /*if (newValue.Length > 2 && !erasingData && Last.Count > 2)
+            {
+                int lasPos = Last.Take(2).Min();
+
+                entryDate.CursorPosition = lasPos;
+            }*/
             entryDate.TextChanged += Entry_TextChanged;
         }
 
@@ -184,6 +246,24 @@ namespace Pruebacamara
         {
             return eventData.NewTextValue?.Length
                 < eventData.OldTextValue?.Length;
+        }
+
+        private void Entry_TextChanged_1(object sender, TextChangedEventArgs e)
+        {
+            Entry entry = (Entry)sender;
+            if (entry.Text.Length == 2)
+            {
+                MesEntry.Focus();
+            }
+        }
+
+        private void MesEntry_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Entry entry = (Entry)sender;
+            if (entry.Text.Length == 2)
+            {
+                AnioEntry.Focus();
+            }
         }
     }
 }

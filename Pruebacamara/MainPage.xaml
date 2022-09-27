@@ -1,7 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Pruebacamara.MainPage">
+             x:Class="Pruebacamara.MainPage"
+             xmlns:behavior="clr-namespace:Pruebacamara.Behaviors"
+             xmlns:conversor="clr-namespace:Pruebacamara.Converters;">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conversor:DateConvert x:Key="DateConvert" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <StackLayout>
         <Label FontSize="Title">Prueba de validación</Label>
@@ -19,7 +27,118 @@
 										   IsTextPredictionEnabled="false"
 										   x:Name="EntryEndDate"
                                             TextChanged="Entry_TextChanged"
-										   MaxLength="11"/>
+										   MaxLength="11"
+                ClearButtonVisibility="WhileEditing"
+                />
+
+        <Entry TextColor="Black"
+               Keyboard="Numeric"
+										   VerticalOptions="Center"
+										   IsSpellCheckEnabled="false"
+										   IsTextPredictionEnabled="false"
+               CharacterSpacing="3">
+            <Entry.Behaviors>
+                <behavior:MaskedBehavior Mask="__/__/____" />
+            </Entry.Behaviors>
+        </Entry>
+
+        <Label>
+            Conversion Binding
+        </Label>
+        <Entry 
+               Keyboard="Numeric"
+            Text="{Binding FechaPresc}"/>
+        <Label>
+            Conversion Final
+        </Label>
+
+
+        <Entry x:Name="NumbertoMoneyEntry" 
+               Keyboard="Numeric"
+              Text="{Binding NumbertoMoney, Converter={StaticResource DateConvert}}"/>
+
+
+        <Label HorizontalOptions="Center">Escriba Día Mes y Año</Label>
+
+        <FlexLayout Direction="Row"
+                    HorizontalOptions="Center"
+                    AlignContent="Center"
+                    AlignItems="Center"
+                    JustifyContent="Center">
+            <Entry
+                Keyboard="Numeric"
+                MaxLength="2"
+                FlexLayout.Basis="10%"
+                TextChanged="Entry_TextChanged_1">
+                
+            </Entry>
+            <Label>/</Label>
+            <Entry Keyboard="Numeric"
+                   x:Name="MesEntry"
+                MaxLength="2"
+                   FlexLayout.Basis="10%"
+                   TextChanged="MesEntry_TextChanged">
+
+            </Entry>
+            <Label>/</Label>
+            <Entry Keyboard="Numeric"
+                MaxLength="4"
+                   x:Name="AnioEntry"
+                   FlexLayout.Basis="15%">
+
+            </Entry>
+        </FlexLayout>
+
+        <Label>Seleccione Día Mes y Año</Label>
+        
+        <FlexLayout Direction="Row"
+                    HorizontalOptions="Center"
+                    AlignContent="Center"
+                    AlignItems="Center"
+                    JustifyContent="SpaceAround">
+            <Picker Title="Día"
+                x:Name="Dia"
+                    FlexLayout.Basis="20%">
+                <Picker.Items >
+                    <x:String>01</x:String>
+                    <x:String>02</x:String>
+                    <x:String>03</x:String>
+                    <x:String>04</x:String>
+                    <x:String>05</x:String>
+                    <x:String>06</x:String>
+                    <x:String>07</x:String>
+                    <x:String>08</x:String>
+                    <x:String>09</x:String>
+                </Picker.Items>
+            </Picker>
+            <Picker Title="Mes"
+                x:Name="Mes"
+                    FlexLayout.Basis="20%">
+                <Picker.Items >
+                    <x:String>01</x:String>
+                    <x:String>02</x:String>
+                    <x:String>03</x:String>
+                    <x:String>04</x:String>
+                    <x:String>05</x:String>
+                    <x:String>06</x:String>
+                    <x:String>07</x:String>
+                    <x:String>08</x:String>
+                    <x:String>09</x:String>
+                    <x:String>10</x:String>
+                    <x:String>11</x:String>
+                    <x:String>12</x:String>
+                </Picker.Items>
+            </Picker>
+            <Picker Title="Año"
+                x:Name="Anio"
+                    FlexLayout.Basis="20%">
+                <Picker.Items >
+ 
+                </Picker.Items>
+            </Picker>
+        </FlexLayout>
+        
+
     </StackLayout>
 
 </ContentPage>
